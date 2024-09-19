@@ -14,16 +14,22 @@ const Login = lazy(() => import("./pages/public/Login.jsx"));
 
 
 const Routes = () => {
-    const { userRole } = useSelector((state) => state.auth);
-
+    const { role } = useSelector((state) => state.auth);
 
     return (
         <React.Fragment>
             <nav>
                 <ul>
-                    <li><Link to="/">Dashboard</Link></li>
-                    {userRole === 'admin' && <li><Link to="/admin/settings">Admin Settings</Link></li>}
-                    {userRole === 'user' && <li><Link to="/user/profile">User Profile</Link></li>}
+                    {role === 'admin' ? (
+                        <li><Link to="/admin/settings">Admin Settings</Link></li>
+                    ) : role === 'user' ? (
+                        <li><Link to="/user/profile">User Profile</Link></li>
+                    ) : (
+                        <>
+                            <li><Link to="/signup">Signup</Link></li>
+                            <li><Link to="/login">Login</Link></li>
+                        </>
+                    )}
                 </ul>
             </nav>
 
@@ -37,7 +43,7 @@ const Routes = () => {
                     <Route path="/login" element={<Login />} />
 
                     {/* Admin Routes */}
-                    {userRole === 'admin' ? (
+                    {role === 'admin' ? (
                         <>
                             <Route path="/admin/dashboard" element={<AdminDashboard />} />
                             <Route path="/admin/settings" element={<AdminSettings />} />
@@ -47,7 +53,7 @@ const Routes = () => {
                     )}
 
                     {/* User Routes */}
-                    {userRole === 'user' ? (
+                    {role === 'user' ? (
                         <>
                             <Route path="/user/dashboard" element={<UserDashboard />} />
                             <Route path="/user/profile" element={<UserProfile />} />
@@ -65,13 +71,12 @@ const Routes = () => {
 }
 
 const Dashboard = () => {
-    const { userRole } = useSelector((state) => state.auth);
+    const { role } = useSelector((state) => state.auth);
 
     return (
         <div>
-            <h1>Dashboard</h1>
-            {userRole === 'admin' && <p>Welcome Admin!</p>}
-            {userRole === 'user' && <p>Welcome User!</p>}
+            {role === 'admin' && <p>Welcome Admin!</p>}
+            {role === 'user' && <p>Welcome User!</p>}
         </div>
     );
 };
